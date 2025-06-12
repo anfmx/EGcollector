@@ -14,43 +14,43 @@ const (
 	chromeProfile = `./ChromeProfile`
 )
 
-type Authenticator struct {
+type Authorizator struct {
 	baseUrl *url.URL
 	browser *rod.Browser
 }
 
-type AuthenticatorBuilder struct {
-	auth Authenticator
+type AuthorizatorBuilder struct {
+	auth Authorizator
 }
 
-func NewAuthenticatorBuilder() *AuthenticatorBuilder {
-	return &AuthenticatorBuilder{}
+func NewAuthorizatorBuilder() *AuthorizatorBuilder {
+	return &AuthorizatorBuilder{}
 }
 
-func (a *AuthenticatorBuilder) WithBaseUrl(baseUrl *url.URL) *AuthenticatorBuilder {
+func (a *AuthorizatorBuilder) WithBaseUrl(baseUrl *url.URL) *AuthorizatorBuilder {
 	a.auth.baseUrl = baseUrl
 	return a
 }
 
-func (a *AuthenticatorBuilder) WithBrowser(browser *rod.Browser) *AuthenticatorBuilder {
+func (a *AuthorizatorBuilder) WithBrowser(browser *rod.Browser) *AuthorizatorBuilder {
 	a.auth.browser = browser
 	return a
 }
 
-func (a *AuthenticatorBuilder) Build() Authenticator {
+func (a *AuthorizatorBuilder) Build() Authorizator {
 	return a.auth
 }
 
-type AuthenticatorDirector struct {
-	authBuilder *AuthenticatorBuilder
+type AuthorizatorDirector struct {
+	authBuilder *AuthorizatorBuilder
 }
 
-func NewAuthDirector() *AuthenticatorDirector {
-	authBuilder := NewAuthenticatorBuilder()
-	return &AuthenticatorDirector{authBuilder: authBuilder}
+func NewAuthDirector() *AuthorizatorDirector {
+	authBuilder := NewAuthorizatorBuilder()
+	return &AuthorizatorDirector{authBuilder: authBuilder}
 }
 
-func (ad *AuthenticatorDirector) ChromeBrowser() Authenticator {
+func (ad *AuthorizatorDirector) ChromeBrowser() Authorizator {
 	baseUrl, err := url.Parse("https://store.epicgames.com/")
 	if err != nil {
 		fmt.Println(err)
@@ -62,7 +62,7 @@ func (ad *AuthenticatorDirector) ChromeBrowser() Authenticator {
 	return ad.authBuilder.WithBaseUrl(baseUrl).WithBrowser(browser).Build()
 }
 
-func (a Authenticator) Login() {
+func (a Authorizator) Login() {
 	page := a.browser.MustPage(a.baseUrl.String())
 	page.MustSetViewport(1920, 1080, 1, false)
 	page.MustWaitLoad()
