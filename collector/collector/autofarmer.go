@@ -13,14 +13,14 @@ const (
 	chromeProfile = `./ChromeProfile`
 )
 
-type AutoFarmer struct {
+type Collector struct {
 	browser    *rod.Browser
 	baseUrl    *url.URL
 	userData   string
 	browserBin string
 }
 
-func NewAutoFarmer(browserBin, userData string) *AutoFarmer {
+func NewCollector(browserBin, userData string) *Collector {
 	ws := launcher.NewUserMode().
 		Bin(browserBin).
 		UserDataDir(userData).
@@ -30,7 +30,7 @@ func NewAutoFarmer(browserBin, userData string) *AutoFarmer {
 
 	base, _ := url.Parse("https://store.epicgames.com")
 
-	return &AutoFarmer{
+	return &Collector{
 		browser:    browser,
 		baseUrl:    base,
 		userData:   userData,
@@ -38,35 +38,35 @@ func NewAutoFarmer(browserBin, userData string) *AutoFarmer {
 	}
 }
 
-type AutoFarmerBuilder struct {
-	autoFarmer AutoFarmer
+type CollectorBuilder struct {
+	autoFarmer Collector
 }
 
-func (afb *AutoFarmerBuilder) WithBrowser(browser *rod.Browser) *AutoFarmerBuilder {
+func (afb *CollectorBuilder) WithBrowser(browser *rod.Browser) *CollectorBuilder {
 	afb.autoFarmer.browser = browser
 	return afb
 }
-func (afb *AutoFarmerBuilder) WithBaseUrl(baseUrl *url.URL) *AutoFarmerBuilder {
+func (afb *CollectorBuilder) WithBaseUrl(baseUrl *url.URL) *CollectorBuilder {
 	afb.autoFarmer.baseUrl = baseUrl
 	return afb
 }
-func (afb *AutoFarmerBuilder) WithUserData(userData string) *AutoFarmerBuilder {
+func (afb *CollectorBuilder) WithUserData(userData string) *CollectorBuilder {
 	afb.autoFarmer.userData = userData
 	return afb
 }
-func (afb *AutoFarmerBuilder) WithBrowserBin(browserBin string) *AutoFarmerBuilder {
+func (afb *CollectorBuilder) WithBrowserBin(browserBin string) *CollectorBuilder {
 	afb.autoFarmer.browserBin = browserBin
 	return afb
 }
-func (afb *AutoFarmerBuilder) Build() AutoFarmer {
+func (afb *CollectorBuilder) Build() Collector {
 	return afb.autoFarmer
 }
 
-type AutoFarmerBuilderDirector struct {
-	autoFarmerBuilder *AutoFarmerBuilder
+type CollectorBuilderDirector struct {
+	autoFarmerBuilder *CollectorBuilder
 }
 
-func (ad *AutoFarmerBuilderDirector) NewChromeFarmer() AutoFarmer {
+func (ad *CollectorBuilderDirector) NewChromeFarmer() Collector {
 	ws := launcher.NewUserMode().
 		Bin(chromeBin).
 		UserDataDir(chromeProfile).
@@ -84,11 +84,11 @@ func (ad *AutoFarmerBuilderDirector) NewChromeFarmer() AutoFarmer {
 		Build()
 }
 
-func NewAutoFarmDirector() *AutoFarmerBuilderDirector {
-	return &AutoFarmerBuilderDirector{autoFarmerBuilder: &AutoFarmerBuilder{}}
+func NewAutoFarmDirector() *CollectorBuilderDirector {
+	return &CollectorBuilderDirector{autoFarmerBuilder: &CollectorBuilder{}}
 }
 
-func (a AutoFarmer) GetGames() []*rod.Element {
+func (a Collector) GetGames() []*rod.Element {
 	page := a.browser.MustPage("https://store.epicgames.com/en-US/free-games")
 
 	page.MustSetViewport(1920, 1080, 1, false)
@@ -98,7 +98,7 @@ func (a AutoFarmer) GetGames() []*rod.Element {
 	return container.MustElements(".css-g3jcms")
 }
 
-func (a AutoFarmer) AddToCart(href string) {
+func (a Collector) AddToCart(href string) {
 	parsed, err := url.Parse(href)
 	if err != nil {
 		return
@@ -117,7 +117,7 @@ func (a AutoFarmer) AddToCart(href string) {
 	addToCartBtn.MustClick()
 }
 
-func (a AutoFarmer) Checkout() {
+func (a Collector) Checkout() {
 	cart := a.browser.MustPage("https://store.epicgames.com/en-US/cart")
 
 	cart.MustWaitLoad()
