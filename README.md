@@ -31,7 +31,7 @@ go build -o ../../collector.exe main.go
 
 ### Read the instruction in repo/.zip! (Anyway I'm sure that someone will skip this part)
 
-## Features
+## Planned
 
 ### Compability with other browsers
 
