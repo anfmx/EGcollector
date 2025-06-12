@@ -1,12 +1,12 @@
 package main
 
 import (
-	"EGfarmer/autofarmer/autofarmer"
+	"EGcollector/collector/collector"
 	"sync"
 )
 
 func main() {
-	director := autofarmer.NewAutoFarmDirector()
+	director := collector.NewAutoFarmDirector()
 	farmer := director.NewChromeFarmer()
 
 	games := farmer.GetGames()

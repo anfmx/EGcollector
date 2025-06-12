@@ -1,4 +1,4 @@
-package autofarmer
+package collector
 
 import (
 	"net/url"

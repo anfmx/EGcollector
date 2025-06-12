@@ -1,0 +1,13 @@
+1. Run the auth app. This will create custom Chrome profile to work with and login in your EG account
+
+2. Run the collector/autofarmer app. This will collect all giveaway games automatically.
+After checkout you can close opened browser
+
+### Questions
+
+1. Why not use my user profile with saved cookies?
+* Google devtools protocol prevents use of default profile
+
+2. Why 2 progams, not one?
+* They do completely different things(auth is responsible for preparing the environment, while collector is responsible for collecting).
+Combining them into one program would complicate debugging and make conditions more branched

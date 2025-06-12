@@ -1,4 +1,4 @@
-module EGfarmer
+module EGcollector
 
 go 1.24.1
 
