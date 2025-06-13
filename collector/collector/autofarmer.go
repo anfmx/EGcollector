@@ -24,8 +24,8 @@ type CollectorBuilder struct {
 	collector Collector
 }
 
-type CollectorBuilder struct {
-	autoFarmer Collector
+func NewCollectorBuilder() *CollectorBuilder {
+	return &CollectorBuilder{}
 }
 
 func (afb *CollectorBuilder) WithBrowser(browser *rod.Browser) *CollectorBuilder {
@@ -70,8 +70,9 @@ func (ad *CollectorBuilderDirector) NewChromeCollector() Collector {
 		Build()
 }
 
-func NewAutoFarmDirector() *CollectorBuilderDirector {
-	return &CollectorBuilderDirector{autoFarmerBuilder: &CollectorBuilder{}}
+func NewCollectorDirector() *CollectorBuilderDirector {
+	collectorBuilder := NewCollectorBuilder()
+	return &CollectorBuilderDirector{collectorBuilder: collectorBuilder}
 }
 
 func (a Collector) GetGames() []*rod.Element {
