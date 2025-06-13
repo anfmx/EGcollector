@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	director := collector.NewAutoFarmDirector()
-	farmer := director.NewChromeFarmer()
+	director := collector.NewCollectorDirector()
+	collector := director.NewChromeCollector()
 
-	games := farmer.GetGames()
+	games := collector.GetGames()
 	wg := &sync.WaitGroup{}
 
 	for _, game := range games {
@@ -22,11 +22,11 @@ func main() {
 		wg.Add(1)
 		go func(href string) {
 			defer wg.Done()
-			farmer.AddToCart(href)
+			collector.AddToCart(href)
 		}(*href)
 
 	}
 
 	wg.Wait()
-	farmer.Checkout()
+	collector.Checkout()
 }

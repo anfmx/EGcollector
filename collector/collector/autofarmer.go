@@ -20,22 +20,8 @@ type Collector struct {
 	browserBin string
 }
 
-func NewCollector(browserBin, userData string) *Collector {
-	ws := launcher.NewUserMode().
-		Bin(browserBin).
-		UserDataDir(userData).
-		MustLaunch()
-
-	browser := rod.New().ControlURL(ws).MustConnect().NoDefaultDevice()
-
-	base, _ := url.Parse("https://store.epicgames.com")
-
-	return &Collector{
-		browser:    browser,
-		baseUrl:    base,
-		userData:   userData,
-		browserBin: browserBin,
-	}
+type CollectorBuilder struct {
+	collector Collector
 }
 
 type CollectorBuilder struct {
@@ -43,30 +29,30 @@ type CollectorBuilder struct {
 }
 
 func (afb *CollectorBuilder) WithBrowser(browser *rod.Browser) *CollectorBuilder {
-	afb.autoFarmer.browser = browser
+	afb.collector.browser = browser
 	return afb
 }
 func (afb *CollectorBuilder) WithBaseUrl(baseUrl *url.URL) *CollectorBuilder {
-	afb.autoFarmer.baseUrl = baseUrl
+	afb.collector.baseUrl = baseUrl
 	return afb
 }
 func (afb *CollectorBuilder) WithUserData(userData string) *CollectorBuilder {
-	afb.autoFarmer.userData = userData
+	afb.collector.userData = userData
 	return afb
 }
 func (afb *CollectorBuilder) WithBrowserBin(browserBin string) *CollectorBuilder {
-	afb.autoFarmer.browserBin = browserBin
+	afb.collector.browserBin = browserBin
 	return afb
 }
 func (afb *CollectorBuilder) Build() Collector {
-	return afb.autoFarmer
+	return afb.collector
 }
 
 type CollectorBuilderDirector struct {
-	autoFarmerBuilder *CollectorBuilder
+	collectorBuilder *CollectorBuilder
 }
 
-func (ad *CollectorBuilderDirector) NewChromeFarmer() Collector {
+func (ad *CollectorBuilderDirector) NewChromeCollector() Collector {
 	ws := launcher.NewUserMode().
 		Bin(chromeBin).
 		UserDataDir(chromeProfile).
@@ -76,7 +62,7 @@ func (ad *CollectorBuilderDirector) NewChromeFarmer() Collector {
 
 	base, _ := url.Parse("https://store.epicgames.com")
 
-	return ad.autoFarmerBuilder.
+	return ad.collectorBuilder.
 		WithBaseUrl(base).
 		WithBrowser(browser).
 		WithBrowserBin(chromeBin).
