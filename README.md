@@ -15,7 +15,7 @@ This tool **automates the process of claiming free games from the Epic Games Sto
 ### 1. Clone the repository:
 
 ```PowerShell
-git clone https://github.com/anfmx/EGcollector.git
+git clone https://github.com/anfmx/EGcollector
 cd EGfarmer
 ```
 
