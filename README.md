@@ -33,6 +33,4 @@ go build -o ../../collector.exe main.go
 
 ## Planned
 
-### Compability with other browsers
-
-### Compability with linux(firefox brrr)
+### Compability with linux
