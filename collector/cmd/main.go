@@ -8,25 +8,28 @@ import (
 func main() {
 	director := collector.NewCollectorDirector()
 	collector := director.NewChromeCollector()
+	wg := sync.WaitGroup{}
 
 	games := collector.GetGames()
-	wg := &sync.WaitGroup{}
 
 	for _, game := range games {
-
-		href, err := game.Attribute("href")
-		if err != nil || "/en-US/free-games" == *href || href == nil {
+		_, err := game.Element(".css-gyjcm9")
+		if err == nil {
 			continue
 		}
 
 		wg.Add(1)
-		go func(href string) {
+		go func() {
 			defer wg.Done()
-			collector.AddToCart(href)
-		}(*href)
+			href, err := game.Attribute("href")
+			if err != nil || "/en-US/free-games" == *href || href == nil {
+				return
+			}
+
+			collector.AddToCart(*href)
+		}()
 
 	}
-
 	wg.Wait()
 	collector.Checkout()
 }

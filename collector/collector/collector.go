@@ -82,6 +82,7 @@ func (a Collector) GetGames() []*rod.Element {
 	page.MustWaitLoad()
 
 	container := page.MustElement(".css-2u323")
+
 	return container.MustElements(".css-g3jcms")
 }
 
@@ -118,6 +119,8 @@ func (a Collector) Checkout() {
 	PurchaseContainer := cart.MustElement(".webPurchaseContainer").
 		MustElement("iframe").
 		MustFrame()
+
+	time.Sleep(time.Second * 2)
 
 	PurchaseContainer.MustElement(".payment-btn.payment-order-confirm__btn.payment-btn--primary").MustClick()
 }
