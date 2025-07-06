@@ -18,17 +18,13 @@ func main() {
 			continue
 		}
 
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			href, err := game.Attribute("href")
-			if err != nil || "/en-US/free-games" == *href || href == nil {
-				return
-			}
+		defer wg.Done()
+		href, err := game.Attribute("href")
+		if err != nil || "/en-US/free-games" == *href || href == nil {
+			return
+		}
 
-			collector.AddToCart(*href)
-		}()
-
+		collector.AddToCart(*href)
 	}
 	wg.Wait()
 	collector.Checkout()
